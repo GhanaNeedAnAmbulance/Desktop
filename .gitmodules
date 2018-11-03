@@ -1,0 +1,3 @@
+[submodule "firebase4j"]
+	path = firebase4j
+	url = https://github.com/bane73/firebase4j.git

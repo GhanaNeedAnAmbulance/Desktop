@@ -7,7 +7,8 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -42,20 +43,16 @@ public class DesktopGUI extends Application {
 		hName.setFont(Font.font("Helvetica",20));
 		Text avaBedsText = new Text("Available Beds:");
 		avaBedsText.setFont(Font.font("Helvetica",14));
-		TextField avaBedsField = new TextField();
-		avaBedsField.setFont(Font.font("Helvetica",10));
-		avaBedsField.setMaxWidth(50);
+		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>();
 		Text totBedsText = new Text("Total Beds:");
 		totBedsText.setFont(Font.font("Helvetica",14));
-		TextField totBedsField = new TextField();
-		totBedsField.setFont(Font.font("Helvetica",10));
-		totBedsField.setMaxWidth(50);
+		Spinner<Integer> totBedsSpinner = new Spinner<Integer>();
 		
 		HBox avaBeds = new HBox();
-		avaBeds.getChildren().addAll(avaBedsText,avaBedsField);
+		avaBeds.getChildren().addAll(avaBedsText,avaBedsSpinner);
 		avaBeds.setSpacing(5);
 		HBox totBeds = new HBox();
-		totBeds.getChildren().addAll(totBedsText,totBedsField);
+		totBeds.getChildren().addAll(totBedsText,totBedsSpinner);
 		totBeds.setSpacing(5);
 		
 		// Column constraints
