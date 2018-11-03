@@ -29,8 +29,11 @@ public class DesktopGUI extends Application {
 		root = new GridPane();
 		
 		Button applyButton = new Button("Apply");
+		applyButton.setFont(Font.font("Helvetica",11));
 		Button saveButton = new Button("Save and Quit");
+		saveButton.setFont(Font.font("Helvetica",11));
 		Button closeButton = new Button("Cancel");
+		closeButton.setFont(Font.font("Helvetica",11));
 		ButtonBar buttons = new ButtonBar();
 		buttons.getButtons().addAll(applyButton,saveButton,closeButton);
 		buttons.setButtonMinWidth(90);
