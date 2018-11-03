@@ -52,7 +52,7 @@ public class DesktopGUI extends Application {
 	
 	@Override
 	public void start(Stage appStage) throws Exception{
-
+		
 		root = new GridPane();
 		
 		Text hName = new Text(hospitalName);
