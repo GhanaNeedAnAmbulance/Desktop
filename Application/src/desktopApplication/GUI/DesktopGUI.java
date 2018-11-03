@@ -1,8 +1,6 @@
 package desktopApplication.GUI;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonParseException;
@@ -36,12 +34,10 @@ public class DesktopGUI extends Application {
 	
 	public static void main(String[] args) throws FirebaseException, JsonParseException, JsonMappingException, IOException, JacksonUtilityException {
 		// get the base-url (ie: 'http://gamma.firebase.com/username')
-		String firebase_baseUrl = "https://gnaa-4e1a5.firebaseio.com/Hospital/Hospital1";
+		String firebase_baseUrl = "https://gnaa-4e1a5.firebaseio.com/Hospital/Hospital2";
 		
 		
 		Firebase firebase = new Firebase( firebase_baseUrl );
-		
-		
 		FirebaseResponse response = firebase.get();
 		System.out.println( "\n\nResult of GET:\n" + response );
 		System.out.println("\n");
@@ -54,6 +50,9 @@ public class DesktopGUI extends Application {
 		System.out.println(emptyBeds);
 		System.out.println(totBeds);
 		
+		String putUrl = "/emptyBeds";
+		System.out.println(putUrl);
+		firebase.put(putUrl, "53");
 		//LinkedHashMap<Object, Object> hospitalDatabaseHash = LinkedHashMap.class.cast(hospitalDatabase);
 		//System.out.println("made it past LinkedHashMap " + hospitalDatabaseHash.getClass());
 		//Object emptyBedsObject = hospitalDatabaseHash.get("emptyBeds");
@@ -130,9 +129,6 @@ public class DesktopGUI extends Application {
 	    root.add(avaBeds, 0, 2, 2, 1);
 	    root.add(totBeds, 2, 2, 2, 1);
 		root.add(buttons, 3, 4);
-		
-		
-		
 		
 		scene = new Scene(root,400,100);
 		appStage.setScene(scene);
