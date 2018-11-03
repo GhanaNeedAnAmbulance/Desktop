@@ -1,12 +1,15 @@
 package desktopApplication.GUI;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -31,50 +34,26 @@ public class DesktopGUI extends Application {
 	String hospitalName = "Hospital Name";
 	static String hospitalId = "Hospital1";
 	static int totBeds, emptyBeds;
+	static Firebase firebase = null;
 	
 	public static void main(String[] args) throws FirebaseException, JsonParseException, JsonMappingException, IOException, JacksonUtilityException {
 		// get the base-url (ie: 'http://gamma.firebase.com/username')
 		String firebase_baseUrl = "https://gnaa-4e1a5.firebaseio.com/Hospital/Hospital2";
-		
-		
-		Firebase firebase = new Firebase( firebase_baseUrl );
-		FirebaseResponse response = firebase.get();
-		System.out.println( "\n\nResult of GET:\n" + response );
-		System.out.println("\n");
+				
+		firebase = new Firebase( firebase_baseUrl );
+		FirebaseResponse response = null;
+		response = firebase.get();
 		Map<String, Object> database = response.getBody();
 		emptyBeds = (Integer) database.get("emptyBeds");
 		totBeds = (Integer) database.get("totBeds");
-		//System.out.println("object: " + hospitalDatabase.getClass());
-		//System.out.println("object: " + hospitalDatabase);
-		
-		System.out.println(emptyBeds);
-		System.out.println(totBeds);
-		
-		String putUrl = "/emptyBeds";
-		System.out.println(putUrl);
-		firebase.put(putUrl, "53");
-		//LinkedHashMap<Object, Object> hospitalDatabaseHash = LinkedHashMap.class.cast(hospitalDatabase);
-		//System.out.println("made it past LinkedHashMap " + hospitalDatabaseHash.getClass());
-		//Object emptyBedsObject = hospitalDatabaseHash.get("emptyBeds");
-		//System.out.println("empty Beds class: " + emptyBedsObject.getClass());
-		
-		
+				
 		launch(args);
 	}
 	
 	@Override
 	public void start(Stage appStage) throws Exception{
+
 		root = new GridPane();
-		
-		Button applyButton = new Button("Apply");
-		applyButton.setFont(Font.font("Helvetica",11));
-		Button saveButton = new Button("Save and Quit");
-		saveButton.setFont(Font.font("Helvetica",11));
-		Button closeButton = new Button("Close");
-		closeButton.setFont(Font.font("Helvetica",11));
-		ButtonBar buttons = new ButtonBar();
-		buttons.getButtons().addAll(applyButton,saveButton,closeButton);
-		buttons.setButtonMinWidth(90);
 		
 		Text hName = new Text(hospitalName);
 		hName.setFont(Font.font("Helvetica",20));
@@ -88,6 +67,16 @@ public class DesktopGUI extends Application {
 		Spinner<Integer> totBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000, totBeds));
 		totBedsSpinner.setEditable(true);
 		totBedsSpinner.setMaxWidth(85);
+		
+		Button applyButton = new Button("Apply");
+		applyButton.setFont(Font.font("Helvetica",11));
+		Button saveButton = new Button("Save and Quit");
+		saveButton.setFont(Font.font("Helvetica",11));
+		Button closeButton = new Button("Close");
+		closeButton.setFont(Font.font("Helvetica",11));
+		ButtonBar buttons = new ButtonBar();
+		buttons.getButtons().addAll(applyButton,saveButton,closeButton);
+		buttons.setButtonMinWidth(90);
 		
 		HBox avaBeds = new HBox();
 		avaBeds.getChildren().addAll(avaBedsText,avaBedsSpinner);
@@ -135,5 +124,52 @@ public class DesktopGUI extends Application {
 		appStage.setTitle("Ghana need an ambulance");
 		appStage.show();
 		
+		applyButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				String putUrl = "/emptyBeds";
+				String avaBedsSpinnerString = avaBedsSpinner.getValue().toString();
+				System.out.println(avaBedsSpinnerString);
+				try {
+					firebase.put(putUrl, avaBedsSpinnerString);
+				} catch (UnsupportedEncodingException | FirebaseException e1) {
+					e1.printStackTrace();
+				}
+				putUrl = "/totBeds";
+				String totBedsSpinnerString = totBedsSpinner.getValue().toString();
+				System.out.println(totBedsSpinnerString);
+				try {
+					firebase.put(putUrl, totBedsSpinnerString);
+				} catch (UnsupportedEncodingException | FirebaseException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
+		saveButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				String putUrl = "/emptyBeds";
+				String avaBedsSpinnerString = avaBedsSpinner.getValue().toString();
+				System.out.println(avaBedsSpinnerString);
+				try {
+					firebase.put(putUrl, avaBedsSpinnerString);
+				} catch (UnsupportedEncodingException | FirebaseException e1) {
+					e1.printStackTrace();
+				}
+				putUrl = "/totBeds";
+				String totBedsSpinnerString = totBedsSpinner.getValue().toString();
+				System.out.println(totBedsSpinnerString);
+				try {
+					firebase.put(putUrl, totBedsSpinnerString);
+				} catch (UnsupportedEncodingException | FirebaseException e1) {
+					e1.printStackTrace();
+				}
+				appStage.close();
+			}
+			
+		});
+		
 	}
+	
+	
 }
