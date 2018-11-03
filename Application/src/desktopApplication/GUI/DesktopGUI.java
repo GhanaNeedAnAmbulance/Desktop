@@ -46,10 +46,12 @@ public class DesktopGUI extends Application {
 		hName.setFont(Font.font("Helvetica",20));
 		Text avaBedsText = new Text("Available Beds:");
 		avaBedsText.setFont(Font.font("Helvetica",14));
-		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,100));
+		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000));
+		avaBedsSpinner.setMaxWidth(65);
 		Text totBedsText = new Text("Total Beds:");
 		totBedsText.setFont(Font.font("Helvetica",14));
-		Spinner<Integer> totBedsSpinner = new Spinner<Integer>();
+		Spinner<Integer> totBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000));
+		totBedsSpinner.setMaxWidth(65);
 		
 		HBox avaBeds = new HBox();
 		avaBeds.getChildren().addAll(avaBedsText,avaBedsSpinner);
@@ -93,7 +95,7 @@ public class DesktopGUI extends Application {
 		root.add(buttons, 3, 4);
 		
 		
-		scene = new Scene(root,320,100);
+		scene = new Scene(root,360,100);
 		appStage.setScene(scene);
 		appStage.setTitle("Ghana need an ambulance");
 		appStage.show();
