@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -31,37 +32,32 @@ import net.thegreshams.firebase4j.error.*;
 public class DesktopGUI extends Application {
 	GridPane root;
 	Scene scene;
+	GridPane loginRoot;
+	Scene loginScene;
 	String hospitalName = "Hospital Name";
-	static String hospitalId = "Hospital1";
+	static String hospitalId = "Hospital2";
 	static int totBeds, emptyBeds;
 	static Firebase firebase = null;
 	
 	public static void main(String[] args) throws FirebaseException, JsonParseException, JsonMappingException, IOException, JacksonUtilityException {
-		// get the base-url (ie: 'http://gamma.firebase.com/username')
-		String firebase_baseUrl = "https://gnaa-4e1a5.firebaseio.com/Hospital/Hospital2";
-				
-		firebase = new Firebase( firebase_baseUrl );
-		FirebaseResponse response = null;
-		response = firebase.get();
-		Map<String, Object> database = response.getBody();
-		emptyBeds = (Integer) database.get("emptyBeds");
-		totBeds = (Integer) database.get("totBeds");
+		
 				
 		launch(args);
 	}
 	
 	@Override
 	public void start(Stage appStage) throws Exception{
-
+		
+		
 		root = new GridPane();
 		
 		Text hName = new Text(hospitalName);
 		hName.setFont(Font.font("Helvetica",20));
-		Text avaBedsText = new Text("Available Beds:");
-		avaBedsText.setFont(Font.font("Helvetica",14));
-		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000, emptyBeds));
-		avaBedsSpinner.setEditable(true);
-		avaBedsSpinner.setMaxWidth(85);
+		Text emptyBedsText = new Text("Available Beds:");
+		emptyBedsText.setFont(Font.font("Helvetica",14));
+		Spinner<Integer> emptyBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000, emptyBeds));
+		emptyBedsSpinner.setEditable(true);
+		emptyBedsSpinner.setMaxWidth(85);
 		Text totBedsText = new Text("Total Beds:");
 		totBedsText.setFont(Font.font("Helvetica",14));
 		Spinner<Integer> totBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000, totBeds));
@@ -78,12 +74,12 @@ public class DesktopGUI extends Application {
 		buttons.getButtons().addAll(applyButton,saveButton,closeButton);
 		buttons.setButtonMinWidth(90);
 		
-		HBox avaBeds = new HBox();
-		avaBeds.getChildren().addAll(avaBedsText,avaBedsSpinner);
-		avaBeds.setSpacing(5);
-		HBox totBeds = new HBox();
-		totBeds.getChildren().addAll(totBedsText,totBedsSpinner);
-		totBeds.setSpacing(5);
+		HBox emptyBedsBox = new HBox();
+		emptyBedsBox.getChildren().addAll(emptyBedsText,emptyBedsSpinner);
+		emptyBedsBox.setSpacing(5);
+		HBox totBedsBox = new HBox();
+		totBedsBox.getChildren().addAll(totBedsText,totBedsSpinner);
+		totBedsBox.setSpacing(5);
 		
 		// Column constraints
 	    ColumnConstraints column1 = new ColumnConstraints();
@@ -115,19 +111,56 @@ public class DesktopGUI extends Application {
 	    GridPane.setValignment(hName, VPos.TOP);
 	    root.setPadding(new Insets(0,5,5,5));
 	    root.add(hName, 0, 0);
-	    root.add(avaBeds, 0, 2, 2, 1);
-	    root.add(totBeds, 2, 2, 2, 1);
+	    root.add(emptyBedsBox, 0, 2, 2, 1);
+	    root.add(totBedsBox, 2, 2, 2, 1);
 		root.add(buttons, 3, 4);
 		
 		scene = new Scene(root,400,100);
-		appStage.setScene(scene);
+		
+		//login scene
+		
+		loginRoot = new GridPane();
+		
+	    ColumnConstraints loginColumn1 = new ColumnConstraints();
+	    loginColumn1.setPercentWidth(50);
+	    ColumnConstraints loginColumn2 = new ColumnConstraints();
+	    loginColumn2.setPercentWidth(50);
+	    loginRoot.getColumnConstraints().addAll(loginColumn1,loginColumn2);
+	    
+		RowConstraints loginRow1 = new RowConstraints();
+	    loginRow1.setPercentHeight(40);
+	    RowConstraints loginRow2 = new RowConstraints();
+	    loginRow2.setPercentHeight(20);
+	    RowConstraints loginRow3 = new RowConstraints();
+	    loginRow3.setPercentHeight(40);
+	    loginRoot.getRowConstraints().addAll(loginRow1,loginRow2,loginRow3);
+	    
+	    
+	    
+		Text hIdRequest = new Text("Enter your hospital ID");
+		hIdRequest.setFont(Font.font("Helvetica",20));
+		TextField hId = new TextField();
+		hId.setMaxWidth(150);
+		loginRoot.add(hIdRequest, 0, 0);
+		loginRoot.add(hId, 1, 0);
+		
+		Button loginButton = new Button("Login");
+		loginButton.setFont(Font.font("Helvetica",11));
+		loginRoot.add(loginButton, 1, 2);
+		
+		loginRoot.setPadding(new Insets(5));
+		
+		
+		loginScene = new Scene(loginRoot,400,100);
+		appStage.setScene(loginScene);
 		appStage.setTitle("Ghana need an ambulance");
 		appStage.show();
+		
 		
 		applyButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				String putUrl = "/emptyBeds";
-				String avaBedsSpinnerString = avaBedsSpinner.getValue().toString();
+				String avaBedsSpinnerString = emptyBedsSpinner.getValue().toString();
 				System.out.println(avaBedsSpinnerString);
 				try {
 					firebase.put(putUrl, avaBedsSpinnerString);
@@ -149,7 +182,7 @@ public class DesktopGUI extends Application {
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				String putUrl = "/emptyBeds";
-				String avaBedsSpinnerString = avaBedsSpinner.getValue().toString();
+				String avaBedsSpinnerString = emptyBedsSpinner.getValue().toString();
 				System.out.println(avaBedsSpinnerString);
 				try {
 					firebase.put(putUrl, avaBedsSpinnerString);
@@ -168,6 +201,46 @@ public class DesktopGUI extends Application {
 			}
 			
 		});
+
+		closeButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				appStage.close();
+			}
+			
+		});
+
+		
+		loginButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				hospitalId = hId.getText();
+				
+				System.out.println(hospitalId);
+				// get the base-url (ie: 'http://gamma.firebase.com/username')
+				String firebase_baseUrl = "https://gnaa-4e1a5.firebaseio.com/Hospital/" + hospitalId;
+				
+				try {
+					firebase = new Firebase( firebase_baseUrl );
+				} catch (FirebaseException e2) {
+					e2.printStackTrace();
+				}
+				FirebaseResponse response = null;
+				try {
+					response = firebase.get();
+				} catch (FirebaseException | UnsupportedEncodingException e2) {
+					e2.printStackTrace();
+				}
+				Map<String, Object> database = response.getBody();
+				emptyBeds = (Integer) database.get("emptyBeds");
+				totBeds = (Integer) database.get("totBeds");
+				
+				emptyBedsSpinner.getValueFactory().setValue(emptyBeds);
+				totBedsSpinner.getValueFactory().setValue(totBeds);
+				
+				
+				appStage.setScene(scene);
+			}
+		});
+		
 		
 	}
 	
