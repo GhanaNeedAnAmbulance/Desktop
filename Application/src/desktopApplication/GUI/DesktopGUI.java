@@ -8,13 +8,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import javafx.scene.text.*;
+import net.thegreshams.firebase4j.service.Firebase;
+import net.thegreshams.firebase4j.model.FirebaseResponse;
+import net.thegreshams.firebase4j.error.*;
 
 public class DesktopGUI extends Application {
 	GridPane root;
@@ -43,7 +46,7 @@ public class DesktopGUI extends Application {
 		hName.setFont(Font.font("Helvetica",20));
 		Text avaBedsText = new Text("Available Beds:");
 		avaBedsText.setFont(Font.font("Helvetica",14));
-		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>();
+		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,100));
 		Text totBedsText = new Text("Total Beds:");
 		totBedsText.setFont(Font.font("Helvetica",14));
 		Spinner<Integer> totBedsSpinner = new Spinner<Integer>();
