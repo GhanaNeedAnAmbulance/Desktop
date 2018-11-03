@@ -36,7 +36,7 @@ public class DesktopGUI extends Application {
 		applyButton.setFont(Font.font("Helvetica",11));
 		Button saveButton = new Button("Save and Quit");
 		saveButton.setFont(Font.font("Helvetica",11));
-		Button closeButton = new Button("Cancel");
+		Button closeButton = new Button("Close");
 		closeButton.setFont(Font.font("Helvetica",11));
 		ButtonBar buttons = new ButtonBar();
 		buttons.getButtons().addAll(applyButton,saveButton,closeButton);
@@ -47,10 +47,12 @@ public class DesktopGUI extends Application {
 		Text avaBedsText = new Text("Available Beds:");
 		avaBedsText.setFont(Font.font("Helvetica",14));
 		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000));
+		avaBedsSpinner.setEditable(true);
 		avaBedsSpinner.setMaxWidth(65);
 		Text totBedsText = new Text("Total Beds:");
 		totBedsText.setFont(Font.font("Helvetica",14));
 		Spinner<Integer> totBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000));
+		totBedsSpinner.setEditable(true);
 		totBedsSpinner.setMaxWidth(65);
 		
 		HBox avaBeds = new HBox();
