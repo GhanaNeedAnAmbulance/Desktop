@@ -1,5 +1,13 @@
 package desktopApplication.GUI;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -23,8 +31,35 @@ public class DesktopGUI extends Application {
 	GridPane root;
 	Scene scene;
 	String hospitalName = "Hospital Name";
+	static String hospitalId = "Hospital1";
+	static int totBeds, emptyBeds;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FirebaseException, JsonParseException, JsonMappingException, IOException, JacksonUtilityException {
+		// get the base-url (ie: 'http://gamma.firebase.com/username')
+		String firebase_baseUrl = "https://gnaa-4e1a5.firebaseio.com/Hospital/Hospital1";
+		
+		
+		Firebase firebase = new Firebase( firebase_baseUrl );
+		
+		
+		FirebaseResponse response = firebase.get();
+		System.out.println( "\n\nResult of GET:\n" + response );
+		System.out.println("\n");
+		Map<String, Object> database = response.getBody();
+		emptyBeds = (Integer) database.get("emptyBeds");
+		totBeds = (Integer) database.get("totBeds");
+		//System.out.println("object: " + hospitalDatabase.getClass());
+		//System.out.println("object: " + hospitalDatabase);
+		
+		System.out.println(emptyBeds);
+		System.out.println(totBeds);
+		
+		//LinkedHashMap<Object, Object> hospitalDatabaseHash = LinkedHashMap.class.cast(hospitalDatabase);
+		//System.out.println("made it past LinkedHashMap " + hospitalDatabaseHash.getClass());
+		//Object emptyBedsObject = hospitalDatabaseHash.get("emptyBeds");
+		//System.out.println("empty Beds class: " + emptyBedsObject.getClass());
+		
+		
 		launch(args);
 	}
 	
@@ -46,14 +81,14 @@ public class DesktopGUI extends Application {
 		hName.setFont(Font.font("Helvetica",20));
 		Text avaBedsText = new Text("Available Beds:");
 		avaBedsText.setFont(Font.font("Helvetica",14));
-		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000));
+		Spinner<Integer> avaBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000, emptyBeds));
 		avaBedsSpinner.setEditable(true);
-		avaBedsSpinner.setMaxWidth(65);
+		avaBedsSpinner.setMaxWidth(85);
 		Text totBedsText = new Text("Total Beds:");
 		totBedsText.setFont(Font.font("Helvetica",14));
-		Spinner<Integer> totBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000));
+		Spinner<Integer> totBedsSpinner = new Spinner<Integer>(new IntegerSpinnerValueFactory(0,1000, totBeds));
 		totBedsSpinner.setEditable(true);
-		totBedsSpinner.setMaxWidth(65);
+		totBedsSpinner.setMaxWidth(85);
 		
 		HBox avaBeds = new HBox();
 		avaBeds.getChildren().addAll(avaBedsText,avaBedsSpinner);
@@ -97,7 +132,9 @@ public class DesktopGUI extends Application {
 		root.add(buttons, 3, 4);
 		
 		
-		scene = new Scene(root,360,100);
+		
+		
+		scene = new Scene(root,400,100);
 		appStage.setScene(scene);
 		appStage.setTitle("Ghana need an ambulance");
 		appStage.show();
