@@ -224,9 +224,11 @@ public class DesktopGUI extends Application {
 				Map<String, Object> database = response.getBody();
 				emptyBeds = (Integer) database.get("emptyBeds");
 				totBeds = (Integer) database.get("totBeds");
+				hospitalName = (String) database.get("hospitalName");
 				
 				emptyBedsSpinner.getValueFactory().setValue(emptyBeds);
 				totBedsSpinner.getValueFactory().setValue(totBeds);
+				hName.setText(hospitalName);
 				
 				appStage.setScene(scene);
 			}
@@ -253,9 +255,11 @@ public class DesktopGUI extends Application {
 					Map<String, Object> database = response.getBody();
 					emptyBeds = (Integer) database.get("emptyBeds");
 					totBeds = (Integer) database.get("totBeds");
+					hospitalName = (String) database.get("hospitalName");
 				
 					emptyBedsSpinner.getValueFactory().setValue(emptyBeds);
 					totBedsSpinner.getValueFactory().setValue(totBeds);
+					hName.setText(hospitalName);
 				
 					appStage.setScene(scene);
 				}
