@@ -19,6 +19,8 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -89,7 +91,7 @@ public class DesktopGUI extends Application {
 	    column3.setPercentWidth(25);
 	    ColumnConstraints column4 = new ColumnConstraints();
 	    column4.setPercentWidth(25);
-	    root.getColumnConstraints().addAll(column1,column2,column3,column4); // each get 50% of width
+	    root.getColumnConstraints().addAll(column1,column2,column3,column4);
 	    
 	    // Row constraints
 	    RowConstraints row1 = new RowConstraints();
@@ -117,7 +119,6 @@ public class DesktopGUI extends Application {
 		scene = new Scene(root,400,100);
 		
 		//login scene
-		
 		loginRoot = new GridPane();
 		
 	    ColumnConstraints loginColumn1 = new ColumnConstraints();
@@ -134,8 +135,6 @@ public class DesktopGUI extends Application {
 	    loginRow3.setPercentHeight(40);
 	    loginRoot.getRowConstraints().addAll(loginRow1,loginRow2,loginRow3);
 	    
-	    
-	    
 		Text hIdRequest = new Text("Enter your hospital ID");
 		hIdRequest.setFont(Font.font("Helvetica",20));
 		TextField hId = new TextField();
@@ -149,12 +148,10 @@ public class DesktopGUI extends Application {
 		
 		loginRoot.setPadding(new Insets(5));
 		
-		
 		loginScene = new Scene(loginRoot,400,100);
 		appStage.setScene(loginScene);
 		appStage.setTitle("Ghana need an ambulance");
 		appStage.show();
-		
 		
 		applyButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
@@ -174,7 +171,6 @@ public class DesktopGUI extends Application {
 				} catch (UnsupportedEncodingException | FirebaseException e1) {
 					e1.printStackTrace();
 				}
-				
 			}
 		});
 		
@@ -198,17 +194,14 @@ public class DesktopGUI extends Application {
 				}
 				appStage.close();
 			}
-			
 		});
 
 		closeButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				appStage.close();
 			}
-			
 		});
 
-		
 		loginButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				hospitalId = hId.getText();
@@ -235,13 +228,38 @@ public class DesktopGUI extends Application {
 				emptyBedsSpinner.getValueFactory().setValue(emptyBeds);
 				totBedsSpinner.getValueFactory().setValue(totBeds);
 				
-				
 				appStage.setScene(scene);
 			}
 		});
 		
-		
+		hId.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			@Override public void handle(KeyEvent e) {
+				if(e.getCode() == KeyCode.ENTER) {
+					hospitalId = hId.getText();
+					// get the base-url (ie: 'http://gamma.firebase.com/username')
+					String firebase_baseUrl = "https://gnaa-4e1a5.firebaseio.com/Hospital/" + hospitalId;
+					
+					try {
+						firebase = new Firebase( firebase_baseUrl );
+					} catch (FirebaseException e2) {
+						e2.printStackTrace();
+					}
+					FirebaseResponse response = null;
+					try {
+						response = firebase.get();
+					} catch (FirebaseException | UnsupportedEncodingException e2) {
+						e2.printStackTrace();
+					}
+					Map<String, Object> database = response.getBody();
+					emptyBeds = (Integer) database.get("emptyBeds");
+					totBeds = (Integer) database.get("totBeds");
+				
+					emptyBedsSpinner.getValueFactory().setValue(emptyBeds);
+					totBedsSpinner.getValueFactory().setValue(totBeds);
+				
+					appStage.setScene(scene);
+				}
+			}
+		});
 	}
-	
-	
 }
